@@ -20,5 +20,7 @@ files include:
 
 
 //main aesthetic and conceptual framework of this sound installation is to showcase and make immersive and tangible, not only a music of the spheres, but also the fact
-that the univerese no matter how unimaginably vast is measureable and its fuel consciousness.
+that the univerese no matter how unimaginably vast is measureable and its fuel consciousness. If we accept that and scientifiaclly prove it, something only possible through mathematics,
+then we can only speculate how the previous one was or how the next one might be. There is no afterlifer there is no reencarnation there is no excuse such as 'god' there is only one
+cosmos 'the best possible one, under sufficient reason'.
 
