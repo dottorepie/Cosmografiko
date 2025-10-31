@@ -19,3 +19,6 @@ files include:
 -animation and digital image.
 
 
+//main aesthetic and conceptual framework of this sound installation is to showcase and make immersive and tangible, not only a music of the spheres, but also the fact
+that the univerese no matter how unimaginably vast is measureable and its fuel consciousness.
+
