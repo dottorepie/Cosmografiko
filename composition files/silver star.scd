@@ -73,7 +73,8 @@ var iter=45,rep=45,mag=1000,step=2.sqrt.reciprocal;
 var sph,sphcart,sphcart1,sph1;
 var y=1,x=1,y1=1,x1=1,y2=1,x2=1,y3=1,x3=1;
 var y4=1,x4=1,y5=1,x5=1;
-var ot=0.degrad,silver=(1+2.sqrt),w=((1+5.sqrt)/2);
+var silver=(1+2.sqrt),w=((1+5.sqrt)/2);
+var ot=0.degrad,ot1=45.degrad,ot2=90.degrad;
 
 ~data=[];
 
@@ -106,26 +107,57 @@ data=rep.collect{
 };
 
 
-w = Window.new("3D Scatterplot", Rect(40,40, 800, 800)).front;
+w = Window.new("3D Scatterplot", Rect(40,40, 500*3, 500)).front;
 
-~v = UserView.new(w,Rect(0,0,800,800)).background_(Color.black);
-a = ScatterView3d(~v, Rect(0,0, 800,800), ~data, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
-a.drawMethod = \fillRect;
-a.symbolSize = 1;
-a.symbolColor = Color.white;
-a.background = Color.black;
+~v = UserView.new(w,Rect(0,0,500,5000)).background_(Color.black);
+~v1 = UserView.new(w,Rect(500,0,500,500)).background_(Color.black);
+~v2 = UserView.new(w,Rect(500*2,0,500,500)).background_(Color.black);
+b = ScatterView3d(~v, Rect(0,0, 500,500), ~data, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
+c = ScatterView3d(~v1, Rect(0,0, 500,500), ~data, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
+d = ScatterView3d(~v2, Rect(0,0, 500,500), ~data, [-1000, 1000].asSpec,[-1000, 1000].asSpec,[-1000, 1000].asSpec);
+b.drawMethod = \fillRect;
+b.symbolSize = 1;
+b.symbolColor = Color.white;
+b.background = Color.black;
+c.drawMethod = \fillRect;
+c.symbolSize = 1;
+c.symbolColor = Color.white;
+c.background = Color.black;
+d.drawMethod = \fillRect;
+d.symbolSize = 1;
+d.symbolColor = Color.white;
+d.background = Color.black;
 
 ~v.animate;
 ~v.drawFunc ={
-Pen.translate(400,400);
+Pen.translate(250,250);
 
-		a.rot(ot,ot,ot);
+		b.rot(ot,ot,ot);
     ~v.refresh;
-
-		ot=ot+1.degrad;
+		ot=ot+0.5.degrad;
 
 };
-{ while { run } {~v.background_(Color.black); ~v.refresh; (1/1000).wait } }.fork(AppClock);
+{ while { run } {~v.background_(Color.black); ~v.refresh; (1/100).wait } }.fork(AppClock);
+~v1.animate;
+~v1.drawFunc ={
+Pen.translate(250,250);
+
+	c.rot(ot1,ot1,ot1);
+    ~v1.refresh;
+		ot1=ot1+0.5.degrad;
+
+};
+{ while { run } {~v1.background_(Color.black); ~v1.refresh; (1/100).wait } }.fork(AppClock);
+~v2.animate;
+~v2.drawFunc ={
+Pen.translate(250,250);
+
+	d.rot(ot2,ot2,ot2);
+    ~v2.refresh;
+		ot2=ot2+0.5.degrad;
+
+};
+{ while { run } {~v2.background_(Color.black); ~v2.refresh; (1/100).wait } }.fork(AppClock);
 )
 
 
