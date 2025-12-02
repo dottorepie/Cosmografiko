@@ -531,10 +531,9 @@ Pen.translate(400,400);
 
 
 ///////////////////////////////////animated axis
-
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=3;
+s.options.numOutputBusChannels=12;
 s.options.numInputBusChannels=0;
 TempoClock.default.tempo_(1);
 s.options.memSize = 8192*4*2;
@@ -547,16 +546,26 @@ s.boot;
 (
 Buffer.freeAll;
 
-~controlBus_a1 = Bus.control(s, 1);
-~controlBus_a2 = Bus.control(s, 1);
-~controlBus_a3 = Bus.control(s, 1);
+~controlBus_a1 = Bus.control(s, 1);~controlBus_a2 = Bus.control(s, 1);~controlBus_a3 = Bus.control(s, 1);
+~controlBus_x1 = Bus.control(s, 1);~controlBus_x2 = Bus.control(s, 1);~controlBus_x3 = Bus.control(s, 1);
+~controlBus_y1 = Bus.control(s, 1);~controlBus_y2 = Bus.control(s, 1);~controlBus_y3 = Bus.control(s, 1);
+~controlBus_z1 = Bus.control(s, 1);~controlBus_z2 = Bus.control(s, 1);~controlBus_z3 = Bus.control(s, 1);
 
 
 SynthDef.new(\player,{
 
 	Out.kr(~controlBus_a1.index, SinOsc.kr(0.01,0.degrad,mul:1).range(0,10.degrad));
-	Out.kr(~controlBus_a2.index, SinOsc.kr(0.01,45.degrad,mul:1).range(0,10.degrad));
+	Out.kr(~controlBus_a2.index, SinOsc.kr(0.01,90.degrad,mul:1).range(0,10.degrad));
 	Out.kr(~controlBus_a3.index, SinOsc.kr(0.01,90.degrad,mul:1).range(0,10.degrad));
+	Out.kr(~controlBus_x1.index, SinOsc.kr(0.01,90.degrad,mul:1).range(0,1));
+	Out.kr(~controlBus_y1.index, SinOsc.kr(0.01,90.degrad,mul:1).range(0,1));
+	Out.kr(~controlBus_z1.index, SinOsc.kr(0.01,0.degrad,mul:1).range(0,1));
+	Out.kr(~controlBus_x2.index, SinOsc.kr(0.01,90.degrad,mul:1).range(0,1));
+	Out.kr(~controlBus_y2.index, SinOsc.kr(0.01,90.degrad,mul:1).range(0,1));
+	Out.kr(~controlBus_z2.index, SinOsc.kr(0.01,0.degrad,mul:1).range(0,1));
+	Out.kr(~controlBus_x3.index, SinOsc.kr(0.01,90.degrad,mul:1).range(0,1));
+	Out.kr(~controlBus_y3.index, SinOsc.kr(0.01,90.degrad,mul:1).range(0,1));
+	Out.kr(~controlBus_z3.index, SinOsc.kr(0.01,0.degrad,mul:1).range(0,1));
 
 //Out.ar(0,sig*1);
 //Out.ar(1,sig*1);
@@ -609,10 +618,9 @@ var sph6Dd,sphcart6Dd,q6Dd,rotor6Dd,sph6Ddq,rotation6Dd;
 var sph6De,sphcart6De,q6De,rotor6De,sph6Deq,rotation6De;
 var sph6Df,sphcart6Df,q6Df,rotor6Df,sph6Dfq,rotation6Df;
 var axisa,axisb,axisc,angle1=(0).degrad,angle2=(0).degrad,angle3=(0).degrad;
-var xyza=[1,1,1].normalizeSum.sqrt,xyzb=[1,1,1].normalizeSum.sqrt,xyzc=[1,1,1].normalizeSum.sqrt;
-var ia=Quaternion(0, xyza.[0], 0, 0),ja=Quaternion(0, 0, xyza.[1], 0),ka=Quaternion(0, 0, 0, xyza.[2]);
-var ib=Quaternion(0, xyzb.[0], 0, 0),jb=Quaternion(0, 0, xyzb.[1], 0),kb=Quaternion(0, 0, 0, xyzb.[2]);
-var ic=Quaternion(0, xyzc.[0], 0, 0),jc=Quaternion(0, 0, xyzc.[1], 0),kc=Quaternion(0, 0, 0, xyzc.[2]);
+var xyza,xyzb,xyzc;
+var ia,ja,ka,ib,jb,kb,ic,jc,kc;
+var xa=1,ya=1,za=1,xb=1,yb=1,zb=1,xc=1,yc=1,zc=1;
 
 Synth.new(\player);
 ~data = [];
@@ -620,9 +628,6 @@ Synth.new(\player);
 axis1=i+j+k;
 axis2=i1+j1+k1;
 
-axisa=ia+ja+ka;
-axisb=ib+jb+kb;
-axisc=ic+jc+kc;
 
 w = Window.new("3D Scatterplot", Rect(40,40, 800, 800)).front;
 
@@ -652,6 +657,34 @@ Pen.translate(400,400);
 	angle1=~controlBus_a1.getSynchronous;
 	angle2=~controlBus_a2.getSynchronous;
 	angle3=~controlBus_a3.getSynchronous;
+	xa=~controlBus_x1.getSynchronous
+	ya=~controlBus_y1.getSynchronous
+	za=~controlBus_z1.getSynchronous
+	xb=~controlBus_x2.getSynchronous
+	yb=~controlBus_y2.getSynchronous
+	zb=~controlBus_z2.getSynchronous
+	xc=~controlBus_x3.getSynchronous
+	yc=~controlBus_y3.getSynchronous
+	zc=~controlBus_z3.getSynchronous
+
+xyza=[xa,ya,za].normalizeSum.sqrt;
+xyzb=[xb,yb,zb].normalizeSum.sqrt;
+xyzc=[xc,yc,zc].normalizeSum.sqrt;
+
+ia=Quaternion(0, xyza.[0], 0, 0);
+ja=Quaternion(0, 0, xyza.[1], 0);
+ka=Quaternion(0, 0, 0, xyza.[2]);
+ib=Quaternion(0, xyzb.[0], 0, 0);
+jb=Quaternion(0, 0, xyzb.[1], 0);
+kb=Quaternion(0, 0, 0, xyzb.[2]);
+ic=Quaternion(0, xyzc.[0], 0, 0);
+jc=Quaternion(0, 0, xyzc.[1], 0);
+lkc=Quaternion(0, 0, 0, xyzc.[2]);
+
+axisa=ia+ja+ka;
+axisb=ib+jb+kb;
+axisc=ic+jc+kc;
+
 
 	{ iter.do{
 data=rep.collect{
