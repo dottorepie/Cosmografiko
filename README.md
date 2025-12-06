@@ -14,8 +14,8 @@ files include:
 -general notes.
  Notes for installation, setup and equipment.
 -composition files for Synthdef and Patterns, Routines Tasks. 
- Array indormation for cosmic spherical objects control arrays and harmonics (Ambisonics, Bessel etc.) with their mappings to polytope geometric interpolations.
--sculptor(music) which is the code bundle for additioin with external synths and midiout
+ Array information for cosmic spherical objects control arrays and harmonics (Ambisonics, Bessel etc.) with their mappings to polytope geometric interpolations.
+-sculptor(music) which is the code bundle for addition with external synths and midiout and mastering
 -animation and digital image.
 
 
