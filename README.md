@@ -1,6 +1,6 @@
 
 ///
-  Universe is a generative algorithmic additive synthesis SynthDef architecture conceptualizeing an animatronic and auditory timeline of the cosmos,
+  Cosmographic universe is a generative algorithmic additive synthesis SynthDef architecture conceptualizeing an animatronic and auditory timeline of the cosmos,
 utilizing harmonics, sound art, controled randomness, music theory, spatial sound and quaternions. The generative synth can be used as standalone via percussive envelopes in quad, 
 cubic or 12 channel sound installations (VBAP),or as a drone with parallel Midiout via AM/FM with the addition of external synths 
 like the Vermona Perfourmer or other Behringer modules and sequencers, for drum and bass generative techno setups.
