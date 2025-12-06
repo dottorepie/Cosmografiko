@@ -33,9 +33,15 @@ var freq= 110;
 
 
 ///other waveforms
+///with saw abs, with Triangle no abs, as it is similar to sine
 
 {Out.ar(0,Saw.ar(3*64).abs+SinOsc.ar(2*64))}.play
 
+{Out.ar(0,LFTri.ar(3*64)+SinOsc.ar(2*64))}.play
+
 ({Out.ar(0,LFTri.ar(3*64))}.play;
+{Out.ar(0,SinOsc.ar(2*64))}.play)
+
+({Out.ar(0,Saw.ar(3*64).abs)}.play;
 {Out.ar(0,SinOsc.ar(2*64))}.play)
 
