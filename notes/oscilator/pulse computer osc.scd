@@ -42,12 +42,7 @@ var freq= 110;
 {LPF.ar(Pulse.ar(freq*32,width:0.5).abs*SinOsc.ar(freq,mul:1),freq*16)*0.5}.play;
 )
 
-
-
-///other waveforms with analog wavetable similars
-///with saw abs, with Triangle no abs, as it is similar to sine
-
-///Shaper
+////////
 {Out.ar(0,(Saw.ar(56*2*4).abs+SinOsc.ar(56))*0.1)}.play
 
 {Out.ar(0,(Saw.ar(220).abs+SinOsc.ar(220+50))*0.1)}.play
@@ -57,10 +52,24 @@ var freq= 110;
 {Out.ar(0,(LFTri.ar(56*5)+SinOsc.ar(56*4))*0.1)}.play
 
 
-////VOSC
-({Out.ar(0,(LFTri.ar(3*64).abs))*0.1}.play;
+({Out.ar(0,(LFTri.ar(3*64)))*0.1}.play;
 {Out.ar(0,SinOsc.ar(2*64)*0.1)}.play)
 
+({Out.ar(0,Saw.ar(3*64)*0.1)}.play;
+{Out.ar(0,SinOsc.ar(2*64)*0.1)}.play)
+
+({Out.ar(0,Saw.ar(220)*0.1)}.play;
+{Out.ar(0,SinOsc.ar(220-50)*0.1)}.play)
+
+/// with analog wavetable similars
+///with saw abs, with Triangle no abs, as it is similar to sine
+
+///Shaper
+{Out.ar(0,(Saw.ar(56*2*4).abs+SinOsc.ar(56))*0.1)}.play
+
+{Out.ar(0,(Saw.ar(220).abs+SinOsc.ar(220+50))*0.1)}.play
+
+////VOSC
 ({Out.ar(0,Saw.ar(3*64)*0.1)}.play;
 {Out.ar(0,SinOsc.ar(2*64)*0.1)}.play)
 
@@ -89,10 +98,9 @@ signal.plot;
 
 (
 ~w_function= Buffer.alloc(s,2048);
-var ph=0;
 ~function=Env([1.neg,1],[1],[0]).asSignal(1024);
 ~function=~function+(
-	Signal.sineFill(1024,[0,0,0,1,1,1].scramble,[ph])/4;
+	Signal.sineFill(1024,Array.fill(32, {(1+2.sqrt).rand}),[0])/4;
 );
 ~function=~function.normalize;
 ~function.plot;
@@ -103,9 +111,10 @@ var ph=0;
 
 
 (
-var freq=220,b_x=50,low=10000;
-//{Out.ar(2,(LPF.ar(Shaper.ar(~w_function.bufnum,(Saw.ar(freq,1)*SinOsc.ar(freq-b_x,0.degrad,1)),mul:0.1),low)))}.play;
-{Out.ar(2,(LPF.ar(Shaper.ar(~w_function.bufnum,SinOsc.ar(freq-(b_x),0.degrad,0.8),mul:0.1),low)))}.play;
+var freq=220,b_x=40,low=10000;
+{Out.ar(2,(Shaper.ar(~w_function.bufnum,(LPF.ar(Saw.ar(freq,0.5).abs,440)+SinOsc.ar(freq-b_x,0.degrad,0.5)),mul:0.1)))}.play;
+//{Out.ar(2,(LPF.ar(Shaper.ar(~w_function.bufnum,(LFTri.ar(freq,0.00005)+SinOsc.ar(freq-b_x,0.degrad,0.00005)),mul:0.1),low)))}.play;
+//{Out.ar(2,(LPF.ar(Shaper.ar(~w_function.bufnum,SinOsc.ar(freq-(b_x),0.degrad,1),mul:0.1),low)))}.play;
 )
 
 
@@ -113,7 +122,7 @@ var freq=220,b_x=50,low=10000;
 
 	~w_shape1= Buffer.alloc(s,2048);
 		{
-var signal,wt,m=0,amp,ph=0;
+	// var signal,wt,m=0,amp,ph=0;
 
 ~level1=32.collect{m=m+1;amp=m.reciprocal};
 		signal=Signal.sineFill(1024,~level1,[0]);
@@ -161,7 +170,7 @@ signal.plot;
 
 (
 var freq=220,b_x=50.bufpos;
-//{Out.ar(2,(LPF.ar(VOsc.ar(bufpos:,(freq),mul:1).abs,440)*SinOsc.ar(freq-(b_x),0.degrad,1)))}.play
+//{Out.ar(2,(LPF.ar(VOsc.ar(bufpos:,(freq),mul:1).abs,440)+SinOsc.ar(freq-(b_x),0.degrad,1)))}.play
 //{Out.ar(2,(LPF.ar(VOsc.ar(bufpos:SinOsc.ar(freq-(b_x),0.degrad,1).range(0,1),(freq),mul:1).abs,440)))}.play;
-{Out.ar(2,(LPF.ar(VOsc.ar(bufpos:MouseX.kr(0,1),(freq),mul:1).abs,440)*SinOsc.ar(freq-(b_x),0.degrad,1)))}.play;
+{Out.ar(2,(LPF.ar(VOsc.ar(bufpos:MouseX.kr(0,1),(freq),mul:1).abs,440)+SinOsc.ar(freq-(b_x),0.degrad,1)))}.play;
 )
