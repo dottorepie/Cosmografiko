@@ -32,34 +32,120 @@ var freq= 110;
 
 
 
-///other waveforms
+///other waveforms with analog wavetable similars
 ///with saw abs, with Triangle no abs, as it is similar to sine
 
+///Shaper
 {Out.ar(0,(Saw.ar(56*2*4).abs+SinOsc.ar(56))*0.1)}.play
+
+{Out.ar(0,(Saw.ar(220).abs+SinOsc.ar(220+50))*0.1)}.play
+
+{Out.ar(0,(LFTri.ar(220)+SinOsc.ar(220-50))*0.1)}.play
 
 {Out.ar(0,(LFTri.ar(56*5)+SinOsc.ar(56*4))*0.1)}.play
 
-({Out.ar(0,LFTri.ar(3*64))}.play;
-{Out.ar(0,SinOsc.ar(2*64))}.play)
 
-({Out.ar(0,Saw.ar(3*64).abs)}.play;
-{Out.ar(0,SinOsc.ar(2*64))}.play)
+////VOSC
+({Out.ar(0,(LFTri.ar(3*64).abs))*0.1}.play;
+{Out.ar(0,SinOsc.ar(2*64)*0.1)}.play)
+
+({Out.ar(0,Saw.ar(3*64)*0.1)}.play;
+{Out.ar(0,SinOsc.ar(2*64)*0.1)}.play)
+
+({Out.ar(0,Saw.ar(220)*0.1)}.play;
+{Out.ar(0,SinOsc.ar(220-50)*0.1)}.play)
 
 
 
 //////wavetables
 s.boot;
 
-// Assume wavetable bank loaded into buf
+////shaper
 (
-SynthDef(\compareOscs, {
-    var freq = 110;
-    var idx  = SinOsc.kr(0.2).range(0, 7); // Move across wavetables
-    var a = VOsc.ar(\buf.ir(0),  freq, idx);
-    var b = VOsc3.ar(\buf.ir(0), freq, idx);
+			~w_function= Buffer.alloc(s,2048);
+		{
+var signal,wt,m=0,amp,ph=0;
 
-    Out.ar(0, [a, b] * 0.2); // left = VOsc, right = VOsc3
-}).add;
+~level1=32.collect{m=m+1;amp=m.reciprocal};
+		signal=Signal.sineFill(1024,~level1,[0]);
+
+wt = signal.asWavetable;
+~w_function.loadCollection(wt);
+signal.plot;
+		}.value;
+);
+
+(
+~function=Env([1.neg,1],[1],[0]).asSignal(1025);
+~function=~function+(
+	Signal.sineFill(1025,(0!3)++[0,0,0,1,1,1].scramble,{rrand(0,2pi)}!9)/4;
+);
+~function=~function.normalize;
+~function.plot;
+~w_function.loadCollection(~function.asWavetableNoWrap);
 )
 
-Synth.new(\compareOscs)
+
+(
+var freq=220,b_x=50;
+//{(LPF.ar(Shaper.ar(~w_function.bufnum,SinOsc.ar(freq-(b_x),0.degrad,0.1),mul:0.1),440)*SinOsc.ar(220-b_x),0.degrad,0.1)}.play;
+{LPF.ar(Shaper.ar(~w_function.bufnum,SinOsc.ar(freq-(b_x),0.degrad,0.1),mul:0.1),440)}.play;
+)
+
+
+///vosc
+
+	~w_shape1= Buffer.alloc(s,2048);
+		{
+var signal,wt,m=0,amp,ph=0;
+
+~level1=32.collect{m=m+1;amp=m.reciprocal};
+		signal=Signal.sineFill(1024,~level1,[0]);
+
+wt = signal.asWavetable;
+~w_shape1.loadCollection(wt);
+signal.plot;
+		}.value;
+
+						~w_shape2= Buffer.alloc(s,2048);
+		{
+var signal,wt,m=0,amp,ph=0;
+
+~level2=32.collect{m=m+1;amp=m.reciprocal};
+		signal=Signal.sineFill(1024,~level2,[0]);
+
+wt = signal.asWavetable;
+~w_shape2.loadCollection(wt);
+signal.plot;
+		}.value;
+
+						~w_shape3= Buffer.alloc(s,2048);
+		{
+var signal,wt,m=0,amp,ph=0;
+
+~level3=32.collect{m=m+1;amp=m.reciprocal};
+		signal=Signal.sineFill(1024,~level3,[0]);
+
+wt = signal.asWavetable;
+~w_shape4.loadCollection(wt);
+signal.plot;
+		}.value;
+
+						~w_shape4= Buffer.alloc(s,2048);
+		{
+var signal,wt,m=0,amp,ph=0;
+
+~level4=32.collect{m=m+1;amp=m.reciprocal};
+		signal=Signal.sineFill(1024,~level4,[0]);
+
+wt = signal.asWavetable;
+~w_shape4.loadCollection(wt);
+signal.plot;
+		}.value;
+
+(
+var freq=220,b_x=50.bufpos;
+//{(LPF.ar(VOsc.ar(bufpos:,(freq),mul:1).abs,440)*SinOsc.ar(freq-(b_x),0.degrad,1))}.play
+//{(LPF.ar(VOsc.ar(bufpos:SinOsc.ar(freq-(b_x),0.degrad,1).range(0,1),(freq),mul:1).abs,440))}.play;
+{(LPF.ar(VOsc.ar(bufpos:MouseX.kr(0,1),(freq),mul:1).abs,440)*SinOsc.ar(freq-(b_x),0.degrad,1))}.play;
+)
