@@ -45,11 +45,11 @@ var freq= 110;
 ////////
 {Out.ar(0,(Saw.ar(56*2*4).abs+SinOsc.ar(56))*0.1)}.play
 
-{Out.ar(0,(Saw.ar(220).abs+SinOsc.ar(220+50))*0.1)}.play
+{Out.ar(0,(Saw.ar(220).abs+SinOsc.ar(220-50))*0.1)}.play
 
-{Out.ar(0,(LFTri.ar(220)+SinOsc.ar(220-50))*0.1)}.play
+{Out.ar(0,(LFTri.ar(220).range(0,1)+SinOsc.ar(220-50))*0.1)}.play
 
-{Out.ar(0,(LFTri.ar(56*5)+SinOsc.ar(56*4))*0.1)}.play
+{Out.ar(0,(LFTri.ar(56*5).range(0,1)+SinOsc.ar(56*4))*0.1)}.play
 
 
 ({Out.ar(0,(LFTri.ar(3*64)))*0.1}.play;
@@ -67,14 +67,21 @@ var freq= 110;
 ///Shaper
 {Out.ar(0,(Saw.ar(56*2*4).abs+SinOsc.ar(56))*0.1)}.play
 
-{Out.ar(0,(Saw.ar(220).abs+SinOsc.ar(220+50))*0.1)}.play
+{Out.ar(0,(Saw.ar(220).abs+SinOsc.ar(220-50))*0.1)}.play
+
+{Out.ar(0,(LFTri.ar(220)+SinOsc.ar(220-50))*0.1)}.play
+
+{Out.ar(0,(LFTri.ar(56*5)+SinOsc.ar(56*4))*0.1)}.play
 
 ////VOSC
-({Out.ar(0,Saw.ar(3*64)*0.1)}.play;
-{Out.ar(0,SinOsc.ar(2*64)*0.1)}.play)
+{Out.ar(0,(Saw.ar(56*2*4)+SinOsc.ar(56))*0.1)}.play
 
-({Out.ar(0,Saw.ar(220)*0.1)}.play;
-{Out.ar(0,SinOsc.ar(220-50)*0.1)}.play)
+{Out.ar(0,(Saw.ar(220)+SinOsc.ar(220+50))*0.1)}.play
+
+{Out.ar(0,(LFTri.ar(220).range(0,1)+SinOsc.ar(220-50))*0.1)}.play
+
+{Out.ar(0,(LFTri.ar(56*5).range(0,1)+SinOsc.ar(56*4))*0.1)}.play
+
 
 
 
@@ -119,58 +126,34 @@ var freq=220,b_x=40,low=10000;
 
 
 ///vosc
-
+(
+Buffer.freeAll;
+(
 	~w_shape1= Buffer.alloc(s,2048);
 		{
-	// var signal,wt,m=0,amp,ph=0;
+	var signal,wt,m=0,amp,ph=0;
 
-~level1=32.collect{m=m+1;amp=m.reciprocal};
-		signal=Signal.sineFill(1024,~level1,[0]);
-
+		signal=Signal.sineFill(1024,Array.fill(4, {(1+2.sqrt).rand}),[0]);
 wt = signal.asWavetable;
 ~w_shape1.loadCollection(wt);
 signal.plot;
 		}.value;
-
-						~w_shape2= Buffer.alloc(s,2048);
+);
+(
+	~w_shape2= Buffer.alloc(s,2048);
 		{
 var signal,wt,m=0,amp,ph=0;
 
-~level2=32.collect{m=m+1;amp=m.reciprocal};
-		signal=Signal.sineFill(1024,~level2,[0]);
-
+		signal=Signal.sineFill(1024,Array.fill(4, {(1+2.sqrt).rand}),[0]);
 wt = signal.asWavetable;
 ~w_shape2.loadCollection(wt);
 signal.plot;
 		}.value;
-
-						~w_shape3= Buffer.alloc(s,2048);
-		{
-var signal,wt,m=0,amp,ph=0;
-
-~level3=32.collect{m=m+1;amp=m.reciprocal};
-		signal=Signal.sineFill(1024,~level3,[0]);
-
-wt = signal.asWavetable;
-~w_shape4.loadCollection(wt);
-signal.plot;
-		}.value;
-
-						~w_shape4= Buffer.alloc(s,2048);
-		{
-var signal,wt,m=0,amp,ph=0;
-
-~level4=32.collect{m=m+1;amp=m.reciprocal};
-		signal=Signal.sineFill(1024,~level4,[0]);
-
-wt = signal.asWavetable;
-~w_shape4.loadCollection(wt);
-signal.plot;
-		}.value;
-
+);
+)
 (
-var freq=220,b_x=50.bufpos;
-//{Out.ar(2,(LPF.ar(VOsc.ar(bufpos:,(freq),mul:1).abs,440)+SinOsc.ar(freq-(b_x),0.degrad,1)))}.play
-//{Out.ar(2,(LPF.ar(VOsc.ar(bufpos:SinOsc.ar(freq-(b_x),0.degrad,1).range(0,1),(freq),mul:1).abs,440)))}.play;
-{Out.ar(2,(LPF.ar(VOsc.ar(bufpos:MouseX.kr(0,1),(freq),mul:1).abs,440)+SinOsc.ar(freq-(b_x),0.degrad,1)))}.play;
+var freq=220,b_x=1,bufpos,low=440;
+
+//{Out.ar(2,(VOsc.ar(SinOsc.ar(b_x).range(~w_shape1.bufnum,~w_shape2.bufnum),freq)*0.1))}.play;
+//{Out.ar(2,(VOsc.ar(MouseX.kr(0,1),freq,mul:1)*0.1))}.play;
 )
