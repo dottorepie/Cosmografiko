@@ -83,6 +83,30 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 	2.pow(d).round(0.00001).poll;
 		}.play
 		)
+
+
+/////////////sound example
+(var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c, beat=5, frame=32.reciprocal,n=0,bank=(1*3);
+
+~dur=[];
+
+~x=bank.collect{
+m1=m1+1;
+	b=Spherical(beat,~az.[m1],~el.[m1]).x.round(frame);
+	2.pow(b).round(0.00001);
+};
+~y=bank.collect{
+m2=m2+1;
+	c=Spherical(beat,~az.[m2],~el.[m2]).y.round(frame);
+	2.pow(c).round(0.00001);
+};
+~z=bank.collect{
+m3=m3+1;
+	d=Spherical(beat,~az.[m3],~el.[m3]).z.round(frame);
+	2.pow(d).round(0.00001);
+};
+bank.do{ ~dur=~dur++~x.[n]++~y.[n]++~z.[n]; n=n+1;};
+)
 (
 SynthDef(\kick, {
     var env,silver=45,bank=9,linex=0,liney=0,sig;

@@ -62,7 +62,7 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 )
 
 ////tester
-(var m,b,c,d,interval=56,octave=2; {
+(var m,b,c,d,interval=56,octave=1; {
 
 	//m=MouseX.kr(0,3).round(1).asInteger;
 		//m=MouseX.kr(0,1).round(1).asInteger;
@@ -76,34 +76,44 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 		}.play
 		)
 
-
+/////////////sound example
 (
 SynthDef(\chord, {
-    var freq1,freq2,freq3,amp1,amp2,amp3,n1,n2,n3,interval=12,fund=220,env;
+	var freq1,freq2,freq3,n1,n2,n3,fund=440,env,bank=(1*3);
+	var m,b,c,d,interval=12,octave=1,osc1,osc2,osc3;
 
-	env= EnvGen.kr(Env.perc(0.1, 10),doneAction:2,levelScale:1/10);
+	//env= EnvGen.kr(Env.perc(0.1, 10),doneAction:2,levelScale:1/10);
 
-	freq1=fund*2.pow(n1/interval);
-	freq2=fund*2.pow(n2/interval);
-	freq3=fund*2.pow(n3/interval);
+	m=MouseX.kr(0,bank).round(1).asInteger;
+	b=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).x.round(1);
+	c=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).y.round(1);
+	d=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).z.round(1);
+	n1=(2.pow(b/interval)).round(0.0001).poll;
+	n2=(2.pow(c/interval)).round(0.0001).poll;
+	n3=(2.pow(d/interval)).round(0.0001).poll;
 
-	osc1=SinOsc.ar(freq1,mul:amp1);
-	osc1=SinOsc.ar(freq2,mul:amp2);
-	osc1=SinOsc.ar(freq2,mul:amp3);
+	freq1=fund*n1;
+	freq2=fund*n2;
+	freq3=fund*n3;
 
-		Out.ar(2, Pan2.ar(osc1*env,0));
-		Out.ar(2, Pan2.ar(osc2*env,0));
-	    Out.ar(2, Pan2.ar(osc3*env,0));
+	osc1=SinOsc.ar(freq1,mul:n1.reciprocal);
+	osc2=SinOsc.ar(freq2,mul:n2.reciprocal);
+	osc3=SinOsc.ar(freq3,mul:n3.reciprocal);
+
+		Out.ar(0, Pan2.ar(osc1,0));
+		Out.ar(0, Pan2.ar(osc2,0));
+	    Out.ar(0, Pan2.ar(osc3,0));
 
 
 	};
-}).add;
+).add;
 )
 
+Synth.new(\chord
 	(
 		~chord=Pdef(\1, Pbind(\instrument, \chord,
 			//\dur,Pseq(~dur1,inf);
-		\dur,4;
+		\dur,1;
 		))
 )
 
