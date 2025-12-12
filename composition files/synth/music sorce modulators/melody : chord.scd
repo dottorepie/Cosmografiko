@@ -57,16 +57,16 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 
 
 
-(var m,a,b,c, time=8; {
+(var m,a,b,c,interval=12; {
 
-	//m=MouseX.kr(0,32400).round(1).asInteger;
-	m=MouseX.kr(0,3).round(1).asInteger;
-			a=Spherical(time,Select.kr(m,~az),Select.kr(m,~el)).z.round(time.reciprocal);
-			b=Spherical(time,Select.kr(m,~az),Select.kr(m,~el)).x.round(time.reciprocal);
-			c=Spherical(time,Select.kr(m,~az),Select.kr(m,~el)).y.round(time.reciprocal);
-			(2.pow(a/12)/50).poll;
-			(2.pow(b/12)/50).poll;
-			(2.pow(c/12)/50).poll;
+	//m=MouseX.kr(0,3).round(1).asInteger;
+	m=MouseX.kr(0,(360*90)).round(1).asInteger;
+			a=Spherical(12,Select.kr(m,~az),Select.kr(m,~el)).z.round(1);
+			b=Spherical(12,Select.kr(m,~az),Select.kr(m,~el)).x.round(1);
+			c=Spherical(12,Select.kr(m,~az),Select.kr(m,~el)).y.round(1);
+	        (2.pow(a/interval)).poll;
+			(2.pow(b/interval)).poll;
+			(2.pow(c/interval)).poll;
 		}.play
 		)
 
