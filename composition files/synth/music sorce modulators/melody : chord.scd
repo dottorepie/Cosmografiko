@@ -1,3 +1,19 @@
+
+(
+s.options.numWireBufs = 1024*2;
+s.options.numOutputBusChannels=2;
+s.options.numInputBusChannels=0;
+s.options.memSize = 8192*4;
+s.options.blockSize = 64;
+s.options.maxNodes = 1024 * 2;
+//s.makeGui(w);
+//s.options.sampleRate= 44100;
+//s.recHeaderFormat="aiff";
+//s.recSampleFormat ="int16";
+//s.recChannels = 8;
+//s.boot;
+)
+
 //array experiments
 
 ////silver star
@@ -79,12 +95,12 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 /////////////sound example
 (
 SynthDef(\chord, {
-	var freq1,freq2,freq3,n1,n2,n3,fund=440,env,bank=(1*3);
-	var m,b,c,d,interval=12,octave=1,osc1,osc2,osc3;
+	var freq1,freq2,freq3,n1,n2,n3,fund=440,env,bank=(1*11);
+	var m,b,c,d,interval=12,octave=1,osc1,osc2,osc3,osc1a,osc2a,osc3a;
 
 	//env= EnvGen.kr(Env.perc(0.1, 10),doneAction:2,levelScale:1/10);
-
-	m=MouseX.kr(0,bank).round(1).asInteger;
+env=0.05;
+	m=SinOsc.ar(fund/1000/11).range(0,bank);
 	b=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).x.round(1);
 	c=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).y.round(1);
 	d=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).z.round(1);
@@ -96,20 +112,29 @@ SynthDef(\chord, {
 	freq2=fund*n2;
 	freq3=fund*n3;
 
-	osc1=SinOsc.ar(freq1,mul:n1.reciprocal);
-	osc2=SinOsc.ar(freq2,mul:n2.reciprocal);
-	osc3=SinOsc.ar(freq3,mul:n3.reciprocal);
+	osc1=SinOsc.ar(freq1,mul:n1.reciprocal,phase:0.degrad);
+	osc2=SinOsc.ar(freq2,mul:n2.reciprocal,phase:0.degrad);
+	osc3=SinOsc.ar(freq3,mul:n3.reciprocal,phase:0.degrad);
+	///xy view
+	osc1a=SinOsc.ar(freq1,mul:n1.reciprocal,phase:90.degrad);
+	osc2a=SinOsc.ar(freq2,mul:n2.reciprocal,phase:90.degrad);
+	osc3a=SinOsc.ar(freq3,mul:n3.reciprocal,phase:90.degrad);
 
-		Out.ar(0, Pan2.ar(osc1,0));
-		Out.ar(0, Pan2.ar(osc2,0));
-	    Out.ar(0, Pan2.ar(osc3,0));
+		Out.ar(0, Pan2.ar(osc1*env,1));
+		Out.ar(0, Pan2.ar(osc2*env,1));
+	    Out.ar(0, Pan2.ar(osc3*env,1));
+		Out.ar(0, Pan2.ar(osc1a*env,1.neg));
+		Out.ar(0, Pan2.ar(osc2a*env,1.neg));
+	    Out.ar(0, Pan2.ar(osc3a*env,1.neg));
 
 
 	};
 ).add;
 )
 
-Synth.new(\chord
+Synth.new(\chord)
+
+
 	(
 		~chord=Pdef(\1, Pbind(\instrument, \chord,
 			//\dur,Pseq(~dur1,inf);
@@ -126,4 +151,80 @@ TempoClock.default.tempo_(1/1);
 
 ~chord.play;
 ~chord.pause;
+
+////other arrays
+//////cube
+(
+
+~az=[45.degrad,135.degrad,45.neg.degrad,135.neg.degrad,45.degrad,135.degrad,45.neg.degrad,135.neg.degrad];
+~el=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad];
+
+)
+
+/////octahedron
+
+(
+
+~az=[0.degrad,0.degrad,90.degrad,180.degrad,90.neg.degrad,0.degrad];
+~el=[90.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,90.degrad];
+
+)
+/////////////sun
+//////icosahedron
+(
+~az=[90.degrad,90.neg.degrad,0.degrad,180.degrad,58.28.degrad,121.72.degrad,121.72.neg.degrad,58.neg.degrad,90.degrad,90.neg.degrad,0.degrad,180.degrad];
+~el=[58.28.neg.degrad,58.28.neg.degrad,31.72.neg.degrad,31.72.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,58.28.degrad,58.28.degrad,31.72.degrad,31.72.degrad];
+)
+
+/////dodecahedron
+
+(
+~az=[45.degrad,135.neg.degrad,135.degrad,45.neg.degrad,90.degrad,90.neg.degrad,0.degrad,180.degrad,45.degrad,135.neg.degrad,135.degrad,45.neg.degrad,90.degrad,
+	90.neg.degrad,69.09.degrad,110.91.degrad,110.91.neg.degrad,69.09.neg.degrad,0.degrad,180.degrad];
+
+~el=[35.26.neg.degrad,35.26.neg.degrad,35.26.neg.degrad,35.26.neg.degrad,69.09.neg.degrad,69.09.neg.degrad,20.91.neg.degrad,20.91.neg.degrad,
+	35.26.degrad,35.26.degrad,35.26.degrad,35.26.degrad,69.09.degrad,69.09.degrad,0.degrad,0.degrad,0.degrad,0.degrad,20.91.degrad,20.91.degrad]
+)
+
+////planet
+/////Rhombic dodecahedron//// hull
+
+(
+~az=[0.degrad,45.degrad,135.neg.degrad,135.degrad,45.neg.degrad,0.degrad,180.degrad,90.degrad,90.neg.degrad,0.degrad,
+	45.degrad,135.neg.degrad,135.degrad,45.neg.degrad];
+~el=[90.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,35.264390.neg.degrad,0.degrad
+	,0.degrad,0.degrad,0.degrad,90.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad,35.264390.degrad];
+)
+
+/////cuboctahedron//// core
+
+(
+~az=[0.degrad,90.degrad,180.degrad,90.neg.degrad,45.degrad,135.degrad,45.neg.degrad,135.neg.degrad,
+	0.degrad,90.degrad,180.degrad,90.neg.degrad];
+~el4=[45.neg.degrad,45.neg.degrad,45.neg.degrad,45.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,
+	45.degrad,45.degrad,45.degrad,45.degrad];
+)
+
+
+///////////////Rhombic Triacontahedron//// hull
+(
+~az=[0.degrad,0.degrad,72.degrad,144.degrad,144.neg.degrad,72.neg.degrad,36.degrad,108.degrad,180.degrad,108.neg.degrad,36.neg.degrad,
+	0.degrad,72.degrad,144.degrad,144.neg.degrad,72.neg.degrad,36.degrad,108.degrad,180.degrad,108.neg.degrad,36.neg.degrad,
+	0.degrad,72.degrad,144.degrad,144.neg.degrad,72.neg.degrad,36.degrad,108.degrad,180.degrad,108.neg.degrad,36.neg.degrad,0.degrad];
+
+~el=[90.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,52.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,26.6.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,10.8.neg.degrad,52.6.degrad,52.6.degrad,52.6.degrad,52.6.degrad,52.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,26.6.degrad,10.8.degrad,10.8.degrad,10.8.degrad,10.8.degrad,10.8.degrad,90.degrad];
+
+)
+~az.[32].raddeg
+~el.[32].raddeg
+
+///////icosidodecahedron//// core
+(
+~az=[18.degrad,90.degrad,162.degrad,126.neg.degrad,54.neg.degrad,54.degrad,126.degrad,162.neg.degrad,90.neg.degrad,18.neg.degrad,
+	0.degrad,36.degrad,72.degrad,108.degrad,144.degrad,180.degrad,144.neg.degrad,108.neg.degrad,72.neg.degrad,36.neg.degrad,
+	54.degrad,126.degrad,162.neg.degrad,90.neg.degrad,18.neg.degrad,18.degrad,90.degrad,162.degrad,126.neg.degrad,54.neg.degrad];
+
+~el=[58.283.degrad,58.283.degrad,58.283.degrad,58.283.degrad,58.283.degrad,58.283.neg.degrad,58.283.neg.degrad,58.283.neg.degrad,58.283.neg.degrad,58.283.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,0.degrad,
+37.717.degrad,37.717.degrad,37.717.degrad,37.717.degrad,37.717.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad,37.717.neg.degrad];
+
 )
