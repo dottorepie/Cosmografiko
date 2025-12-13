@@ -61,9 +61,9 @@ el1=0;n=90;
 (
 {
 var  sph1,sph2,sph3,az1=0,el1=0,az2=0,el2=0,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt);
-var azimuth,elevation,angle=0,n=12,ellipsis=[1,1,1];
-var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1;
-	~az=[];~el=[];
+var azimuth,elevation,angle=0,n=12,ellipsis=[1,1,1],ns=0;
+var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1,b,c,d,interval=992;
+			~az=[];~el=[];~tone=[];
 
 	360.do{
 azimuth=90.collect{
@@ -82,7 +82,12 @@ sph2=(Spherical(mag2,(az2.degrad+angle.degrad).wrap(pi.neg,pi),(el2.degrad+angle
 angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(180*2.pow(n/12)));
 ~az=~az++azimuth;~el=~el++elevation;
 		az1=0;el1=0;az2=0;el2=0;
-	}
+	};
+
+			(360*90).do{ b=Spherical(interval,~az.[n],~el.[ns]).x.round(0.0001);
+				         c=Spherical(interval,~az.[n],~el.[ns]).y.round(0.0001);
+				         d=Spherical(interval,~az.[n],~el.[ns]).z.round(0.0001);
+				~tone=~tone++b++c++d; ns=ns+1;};
 }.value;
 );
 
@@ -113,24 +118,25 @@ m3=m3+1;
 (
 SynthDef(\kick, {
     var env,silver=45,bank=9,linex=0,liney=0,sig;
-	var phs,golden=0,ton=8,freq,decay=2,rq=0.1;
+	var phs,golden=0,ton=4,freq,decay=2,rq=0.1,band;
 
 	freq = EnvGen.kr(Env([56*ton, 56],  [decay/4], curve: -4)); // pitch drop
-	env= EnvGen.kr(Env.perc(0.0001, decay, curve: -4),doneAction:2,levelScale:8);
+	env= EnvGen.kr(Env.perc(0.0001, decay, curve: -4),doneAction:2,levelScale:2);
 	//sig = SinOsc.ar(freq,freq/56) * env;
 
 	bank.do{
 
+		band=SinOsc.ar(0.1,2pi.rand2).range(56*ton,56);
 linex=exp(Complex(0,1)*silver.degrad).real.round(0.00001).abs;
 liney=exp(Complex(0,1)*silver.degrad).imag.round(0.00001).abs.neg;
 phs=golden.degrad;
 
 		sig=
 BPF.ar(BRF.ar(
-(LPF.ar(Saw.ar((freq),mul:ton.reciprocal).abs,freq/16)+SinOsc.ar(freq/5,phs,ton.reciprocal)),
-	56,rq),56,rq);
+(LPF.ar(Saw.ar((freq),mul:ton.reciprocal).abs,freq/8)+SinOsc.ar(freq-10,phs,ton.reciprocal)),
+	band,rq),band,rq);
 
-sig = sig + (sig * BrownNoise.ar(0.0005)); // add slight noise for punch
+sig = sig + (sig * BrownNoise.ar(0.0001)); // add slight noise for punch
 
 		Out.ar(0, Pan2.ar((sig),linex,env));
 		Out.ar(0, Pan2.ar((sig),liney,env));
@@ -161,7 +167,7 @@ wt = signal.asWavetable;
 ~w_function= Buffer.alloc(s,2048);
 ~function=Env([1.neg,1],[1],[0]).asSignal(1025);
 ~function=~function+(
-	Signal.sineFill(1024,Array.fill(8, {20.rand}),[0])/4;
+	Signal.sineFill(1024,Array.fill(2, {20.rand}),[0])/4;
 );
 ~function=~function.normalize;
 //~function.plot;
@@ -172,52 +178,55 @@ wt = signal.asWavetable;
 
 (
 SynthDef(\chord, {
-	arg m;
-	var freq1,freq2,freq3,n1,n2,n3,fund=28,env,band,decay=4,mix=0.5,room=0.3333,gain=10;
-	var b,c,d,interval=12,octave=4,osc1,osc2,osc3,cell_l,cell_r,cell_tria,linex,liney;
-	var gold_r=((1+5.sqrt)/2),rq=0.1,silver=45,silver_r=(1+2.sqrt),l=1,bank=9;
+	arg m,note;
+	var freq1,freq2,freq3,n1,n2,n3,fund=496,env,band,decay=4,mix=0.4,room=0.7,gain=1/20;
+	var b,c,d,interval=992,octave=2,osc1,osc2,osc3,cell_l,cell_r,cell_tria,linex,liney;
+	var gold_r=((1+5.sqrt)/2),rq=0.5,silver=45,silver_r=(1+2.sqrt),l=1,bank=5;
+	var amp1,amp2,amp3,int,tone;
 
 	env= EnvGen.kr(Env.perc(0.01, decay),doneAction:2,levelScale:gain);
 //env=0.05;
-	b=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).x.round(1);
-	c=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).y.round(1);
-	d=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).z.round(1);
+	b=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).x.round(1);
+	c=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).y.round(1);
+	d=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).z.round(1);
 	n1=(2.pow(b/interval)).round(0.0001);
 	n2=(2.pow(c/interval)).round(0.0001);
 	n3=(2.pow(d/interval)).round(0.0001);
 
-	freq1=(fund*l)*n1;
-	freq2=(fund*l)*n2;
-	freq3=(fund*l)*n3;
+	int=l*gold_r;
+	tone=2.pow(note/interval);
 
-	band=SinOsc.kr(0.1,phase:2pi.rand2).range(28,496);
+	freq1=((fund*tone)*int)*n1;
+	freq2=((fund*tone)*int)*n2;
+	freq3=((fund*tone)*int)*n3;
+
+	amp1=tone.reciprocal*int.reciprocal*n1.reciprocal;
+	amp2=tone.reciprocal*int.reciprocal*n2.reciprocal;
+	amp3=tone.reciprocal*int.reciprocal*n3.reciprocal;
+
+//band=SinOsc.kr(0.1,phase:2pi.rand2).range(56,8128);
 bank.do{
+
 linex=exp(Complex(0,1)*silver.degrad).real.abs;
 liney=exp(Complex(0,1)*silver.degrad).imag.abs.neg;
 
-	osc1=BPF.ar(BRF.ar((Shaper.ar(~w_function.bufnum,
-(LPF.ar(Saw.ar(freq1,(n1/50)).abs,fund/32))+SinOsc.ar(freq1-n1,0.degrad,(n1/50)),mul:n1.reciprocal)),
-band,rq),band,rq);
+	osc1=(LPF.ar(Pulse.ar(freq1).abs,fund/8)+SinOsc.ar(freq1/4,0.degrad))*amp1;
 
-	osc2=BPF.ar(BRF.ar((Shaper.ar(~w_function.bufnum,
-(LPF.ar(Saw.ar(freq2,(n2/50)).abs,fund/32))+SinOsc.ar(freq2-n2,0.degrad,(n2/50)),mul:n2.reciprocal)),
-band,rq),band,rq);
+	osc2=(LPF.ar(Pulse.ar(freq2).abs,fund/8)+SinOsc.ar(freq2/4,0.degrad))*amp1;
 
-	osc3=BPF.ar(BRF.ar((Shaper.ar(~w_function.bufnum,
-(LPF.ar(Saw.ar(freq3,(n3/50)).abs,fund/32))+SinOsc.ar(freq3-n3,0.degrad,(n3/50)),mul:n3.reciprocal)),
-band,rq),band,rq);
+	osc3=(LPF.ar(Pulse.ar(freq3).abs,fund/8)+SinOsc.ar(freq3/4,0.degrad))*amp1;
 
 
-cell_l=Saw.kr(rq).range(0,1);
-cell_r=Saw.kr(rq).range(0,1.neg);
-cell_tria=SinOsc.kr(rq,phase:90.degrad);
 
-Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(osc1,mix,room,mul:1),mul:1)*env,1),(linex+cell_l.lag(0.1)).wrap(0,1)));
-Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(osc2,mix,room,mul:1),mul:1)*env,1),(liney+cell_r.lag(0.1)).wrap(0,1.neg)));
-Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(osc3,mix,room,mul:1),mul:1)*env,1),
-cell_tria.lag(0.1)));
+cell_l=SinOsc.kr(1,phase:2pi.rand2).range(0,1);
+cell_r=SinOsc.kr(1,phase:2pi.rand2).range(0,1.neg);
+cell_tria=SinOsc.kr(1,phase:2pi.rand2);
 
-	silver=(silver+(360-silver_r)).wrap(180.neg,180).round(0.0001);
+Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(osc1,mix,room,mul:1),mul:1)*env,1/2),(linex+cell_l).wrap(0,1)));
+Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(osc2,mix,room,mul:1),mul:1)*env,1/2),(liney+cell_r).wrap(0,1.neg)));
+Out.ar(0,Pan2.ar(Limiter.ar(LeakDC.ar(FreeVerb.ar(osc3,mix,room,mul:1),mul:1)*env,1/2),cell_tria));
+
+	silver=(silver+(360-(360/silver_r))).wrap(180.neg,180).round(0.0001);
 	l=l+1;
 }
 
@@ -237,7 +246,8 @@ cell_tria.lag(0.1)));
 (
 		~chord=Pdef(\1, Pbind(\instrument, \chord,
 			//\dur,Pseq(~dur1,inf);
-		\dur,Pseq(~dur/2,inf),
+		\dur,Pseq(~dur/2,60),
+	\note,Pseq(~tone,inf),
 	\m,Pseq(~list,inf);
 		))
 );
