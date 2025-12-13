@@ -1,6 +1,6 @@
 (
 s.options.numWireBufs = 1024*2;
-s.options.numOutputBusChannels=2;
+s.options.numOutputBusChannels=4;
 s.options.numInputBusChannels=0;
 s.options.memSize = 8192*4;
 s.options.blockSize = 64;
@@ -10,7 +10,7 @@ s.options.maxNodes = 1024 * 2;
 //s.recHeaderFormat="aiff";
 //s.recSampleFormat ="int16";
 //s.recChannels = 8;
-//s.boot;
+s.boot;
 )
 
 //array experiments
@@ -101,7 +101,7 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 
 
 /////////////sound example
-(var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c, beat=5, frame=32.reciprocal,n=0,bank=(1*3);
+(var m1=1.neg, m2=1.neg, m3=1.neg,a,b,c, beat=1, frame=32.reciprocal,n=0,bank=(1*5);
 
 ~dur=[];
 
@@ -125,24 +125,29 @@ bank.do{ ~dur=~dur++~x.[n]++~y.[n]++~z.[n]; n=n+1;};
 (
 SynthDef(\kick, {
     var env,silver=45,bank=9,linex=0,liney=0,sig;
-	var phs,golden=90,ton=2,freq,decay=2;
+	var phs,golden=0,ton=8,freq,decay=2,rq=0.1,band;
 
-	freq = EnvGen.kr(Env([56*ton, 28],  [0.5], curve: -4)); // pitch drop
-	env= EnvGen.kr(Env.perc(0.01, decay, curve: -4),doneAction:2,levelScale:1/4);
+	freq = EnvGen.kr(Env([56*ton, 56],  [decay/4], curve: -4)); // pitch drop
+	env= EnvGen.kr(Env.perc(0.0001, decay, curve: -4),doneAction:2,levelScale:8);
 	//sig = SinOsc.ar(freq,freq/56) * env;
+	band=SinOsc.kr(decay).range(12,56);
 
 	bank.do{
+
 
 linex=exp(Complex(0,1)*silver.degrad).real.round(0.00001).abs;
 liney=exp(Complex(0,1)*silver.degrad).imag.round(0.00001).abs.neg;
 phs=golden.degrad;
 
-		sig=(LPF.ar(Pulse.ar((freq),width:0.5,mul:freq/56).abs,56*4)*SinOsc.ar(freq/2,phs,freq/56))*env;
+		sig=
+BPF.ar(BRF.ar(
+(LPF.ar(Saw.ar((freq),mul:ton.reciprocal).abs,freq/16)+SinOsc.ar(freq/5,phs,ton.reciprocal)),
+	band,rq),band,rq);
 
-sig = sig + (sig * BrownNoise.ar(0.0001)); // add slight noise for punch
+sig = sig + (sig * BrownNoise.ar(0.0005)); // add slight noise for punch
 
-		Out.ar(2, Pan2.ar(sig,linex));
-		Out.ar(2, Pan2.ar(sig,liney));
+		Out.ar(2, Pan2.ar((sig),linex,env));
+		Out.ar(2, Pan2.ar((sig),liney,env));
 
 silver=(silver+(360-(360/(1+2.sqrt)))).wrap(180.neg,180).round(0.00001);
 golden=(golden+(360-(360/((1+5.sqrt)/2)))).wrap(180.neg,180).round(0.0001);
@@ -151,18 +156,16 @@ golden=(golden+(360-(360/((1+5.sqrt)/2)))).wrap(180.neg,180).round(0.0001);
 }).add;
 )
 
+Synth.new(\kick)
 	(
 		~kick=Pdef(\1, Pbind(\instrument, \kick,
-			\dur,Pseq(~dur,inf),
+			\dur,Pseq(~dur,inf);
 		))
+)
 
 
 
-
-
-
-
-TempoClock.default.tempo_(1/1);
+TempoClock.default.tempo_(440/120);
 
 
 ~kick.play;
@@ -217,7 +220,7 @@ TempoClock.default.tempo_(1/1);
 (
 ~az=[0.degrad,90.degrad,180.degrad,90.neg.degrad,45.degrad,135.degrad,45.neg.degrad,135.neg.degrad,
 	0.degrad,90.degrad,180.degrad,90.neg.degrad];
-~el4=[45.neg.degrad,45.neg.degrad,45.neg.degrad,45.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,
+~el=[45.neg.degrad,45.neg.degrad,45.neg.degrad,45.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,
 	45.degrad,45.degrad,45.degrad,45.degrad];
 )
 

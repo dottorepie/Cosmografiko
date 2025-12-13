@@ -83,9 +83,9 @@ angle=(angle+((180*2.pow(n/12))-((180*2.pow(n/12))/1.6180339887499))).wrap(0,(18
 	//m=MouseX.kr(0,3).round(1).asInteger;
 		//m=MouseX.kr(0,1).round(1).asInteger;
 	m=MouseX.kr(0,(360*90)).round(1).asInteger;
-	b=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).x.round(1);
-	c=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).y.round(1);
-	d=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).z.round(1);
+	b=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).x.round(1);
+	c=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).y.round(1);
+	d=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).z.round(1);
 	(2.pow(b/interval)).round(0.0001).poll;
 	(2.pow(c/interval)).round(0.0001).poll;
 	(2.pow(d/interval)).round(0.0001).poll;
@@ -101,9 +101,9 @@ SynthDef(\chord, {
 	//env= EnvGen.kr(Env.perc(0.1, 10),doneAction:2,levelScale:1/10);
 env=0.05;
 	m=SinOsc.ar(fund/1000/11).range(0,bank);
-	b=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).x.round(1);
-	c=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).y.round(1);
-	d=Spherical(interval*octave,Select.kr(m,~az),Select.kr(m,~el)).z.round(1);
+	b=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).x.round(1);
+	c=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).y.round(1);
+	d=Spherical(interval*octave,Select.kr(m.lag(0.1),~az),Select.kr(m.lag(0.1),~el)).z.round(1);
 	n1=(2.pow(b/interval)).round(0.0001).poll;
 	n2=(2.pow(c/interval)).round(0.0001).poll;
 	n3=(2.pow(d/interval)).round(0.0001).poll;
@@ -201,7 +201,7 @@ TempoClock.default.tempo_(1/1);
 (
 ~az=[0.degrad,90.degrad,180.degrad,90.neg.degrad,45.degrad,135.degrad,45.neg.degrad,135.neg.degrad,
 	0.degrad,90.degrad,180.degrad,90.neg.degrad];
-~el4=[45.neg.degrad,45.neg.degrad,45.neg.degrad,45.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,
+~el=[45.neg.degrad,45.neg.degrad,45.neg.degrad,45.neg.degrad,0.degrad,0.degrad,0.degrad,0.degrad,
 	45.degrad,45.degrad,45.degrad,45.degrad];
 )
 
