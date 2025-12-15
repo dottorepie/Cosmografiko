@@ -5,7 +5,7 @@ utilizing harmonics, sound art, controled randomness, music theory, spatial soun
 cubic or 12 channel sound installations (VBAP),or as a drone with parallel Midiout via AM/FM with the addition of external synths.
 
 ///
-Complete description on the synthesis, coding structure, musical composition and use of this library will soon be found on the pdf doucemnt and thesis 'manual' on the main directory 
+Complete description on the synthesis, coding structure, musical composition and use of this library can be found on the pdf doucemnt and thesis 'manual' on the main directory 
 
 //
 The conceptual framework of the composition is a Kepler Mysterium Cosmagraphic auditory and partly visual in computer generative graphics.
