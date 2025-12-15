@@ -9,7 +9,7 @@ Complete description on the synthesis, coding structure, musical composition and
 
 //
 The conceptual framework of the composition is a Kepler Mysterium Cosmagraphic auditory and partly visual in computer generative graphics.
-Pairing with doku aesthetic video visual content is conceptually an itnerest, as well an adventure space navigation game via Unreal engine.
+Pairing with doku aesthetic video visual content is conceptually an itnerest, as well as an adventure space navigation game via Unreal engine.
 The concept is modernized in atempt as influenced are of contemporary media theory and open source mathematic and science.
 //main aesthetic and conceptual framework of this sound installation is to showcase and make immersive and tangible, not only a music of the spheres, but also the fact
 that the univerese no matter how unimaginably vast is measureable and its fuel consciousness. If we accept that and scientifiaclly prove it, something only possible through mathematics,
