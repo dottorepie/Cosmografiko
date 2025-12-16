@@ -73,26 +73,27 @@ Slider(w, Rect(920, 10, 10, 450)).action_{|me|
 
 ///////////////////basic model
 (
-var data,run = true,az=0,el=0,pl=0,rep=360,factor=1000;
+var data,run = true,az=0,el=0,pl=0,rep=360,factor=100;
 var step=0,sph,sphcart,silver=(1+2.sqrt),w=((1+5.sqrt)/2);
-var ot=0.degrad,magnitude,a=1;
+var ot=0.degrad,mag=1,a=1,interval=1;
 
 ~data=[];
-
+3.do{
 data=rep.collect{
 	el=~el.[pl];
 	az=~az.[pl];
-	/*	y=(x+a)/x;
-		x=(step*interval);
-		step=step+1;
-		mag=Complex(x,y).rho;
-		mag.postln;*/
 pl=pl+1;
-		sph=Spherical(factor,az,el);
+		mag=Complex(x,y).rho;
+		sph=Spherical(factor*mag,az,el);
 		sphcart=Cartesian(sph.x,sph.y,sph.z).asArray;
 };
+	pl=0;
 ~data=~data++data;
+	step=step+1;
+		x=(step*interval);
+		y=(x+a)/x;
 
+};
 
 
 
