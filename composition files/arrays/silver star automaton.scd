@@ -24,18 +24,18 @@ Buffer.freeAll;
 
 SynthDef.new(\player,{
 
-	Out.kr(~controlBus_a1.index, SinOsc.kr(0.1,0.degrad,mul:90.degrad,add:1));
-	Out.kr(~controlBus_a2.index, SinOsc.kr(0.1,90.degrad,mul:90.degrad,add:1));
-	Out.kr(~controlBus_a3.index, SinOsc.kr(0.1,45.degrad,mul:90.degrad,add:1));
-	Out.kr(~controlBus_x1.index, SinOsc.kr(0.1,0.degrad,mul:1,add:1));
+	Out.kr(~controlBus_a1.index, SinOsc.kr(0.1,0.degrad,mul:pi,add:1));
+	Out.kr(~controlBus_a2.index, SinOsc.kr(0.1,90.degrad,mul:pi,add:1));
+	Out.kr(~controlBus_a3.index, SinOsc.kr(0.1,45.degrad,mul:pi,add:1));
+	Out.kr(~controlBus_x1.index, SinOsc.kr(0.01,0.degrad,mul:1,add:1));
 	Out.kr(~controlBus_y1.index, SinOsc.kr(0.1,90.degrad,mul:1,add:1));
-	Out.kr(~controlBus_z1.index, SinOsc.kr(0.1,45.degrad,mul:1,add:1));
-	Out.kr(~controlBus_x2.index, SinOsc.kr(0.1,0.degrad,mul:1,add:1));
-	Out.kr(~controlBus_y2.index, SinOsc.kr(0.1,90.degrad,mul:1,add:1));
-	Out.kr(~controlBus_z2.index, SinOsc.kr(0.1,45.degrad,mul:1,add:1));
-	Out.kr(~controlBus_x3.index, SinOsc.kr(0.1,0.degrad,mul:1,add:1));
-	Out.kr(~controlBus_y3.index, SinOsc.kr(0.1,90.degrad,mul:1,add:1));
-	Out.kr(~controlBus_z3.index, SinOsc.kr(0.1,45.degrad,mul:1,add:1));
+	Out.kr(~controlBus_z1.index, SinOsc.kr(0.01,45.degrad,mul:1,add:1));
+	Out.kr(~controlBus_x2.index, SinOsc.kr(0.01,0.degrad,mul:1,add:1));
+	Out.kr(~controlBus_y2.index, SinOsc.kr(0.01,90.degrad,mul:1,add:1));
+	Out.kr(~controlBus_z2.index, SinOsc.kr(0.01,45.degrad,mul:1,add:1));
+	Out.kr(~controlBus_x3.index, SinOsc.kr(0.01,0.degrad,mul:1,add:1));
+	Out.kr(~controlBus_y3.index, SinOsc.kr(0.01,90.degrad,mul:1,add:1));
+	Out.kr(~controlBus_z3.index, SinOsc.kr(0.01,45.degrad,mul:1,add:1));
 
 //Out.ar(0,sig*1);
 //Out.ar(1,sig*1);
