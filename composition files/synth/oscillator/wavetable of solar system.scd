@@ -53,7 +53,24 @@ signal.plot;
 {Out.ar(1,Osc.ar(~w.bufnum,55,phase:90.degrad))}.play;
 )
 
-/////////////
+/////////////wavetable based on orbit periods
+
+(	~w= Buffer.alloc(s,2048);
+		{
+var signal,wt,m=0,amp,ph=0;
+var mercury=0.24.reciprocal,venus=0.62.reciprocal,earth=1.reciprocal;
+var mars=1.8.reciprocal,jupiter=11.86.reciprocal;
+var saturn=29.46.reciprocal,uranus=84.01.reciprocal,neptune=164.8.reciprocal;
+var pluto=248.reciprocal;
+
+	signal=Signal.sineFill(1024,[mercury,venus,earth,mars,jupiter,saturn,uranus,neptune,pluto],
+			[0]);  ///au units
+
+wt = signal.asWavetable;
+~w.loadCollection(wt);
+signal.plot;
+		}.value;
+)
 
 
 
