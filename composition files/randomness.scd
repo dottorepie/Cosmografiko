@@ -1,14 +1,40 @@
 
-(
-var silver_ratio=(1+2.sqrt),gold_ratio=((1+5.sqrt)/2), copper_ratio=pi;
+~control_seed=20.rand
 
-thisThread.randSeed = copper_ratio;
+(
+//var silver_ratio=(1+2.sqrt),gold_ratio=((1+5.sqrt)/2), copper_ratio=pi;
+var fibonacci=[0,1,1,2,3,5,8,13,21,34,55,89,144,233,377,610,987,1597,2584,4181];
+var pell=[0,1,2,5,12,29,70,169,408,985,2378,5741,13860,33461,80782,195025,470832,1136689,2744210,6625109];
+var polygon=[6,12,24,48,96,192,384,768,1536,3072,6144,12288,24576,49152,98304,196608,393216,786432,1572864,3145728];
+var polygon_octave=polygon.[~control_seed]/6, aprox,archimidis=polygon.[~control_seed];
+var interval_s,interval_g,interval_c,seed;
+
+aprox= ((sin((30/polygon_octave).degrad)*2)*polygon)/2;  //((sin((30/4).degrad)*2)*24)/2
+
+
+interval_g=fibonacci.[~control_seed];
+interval_s=pell.[~control_seed];
+interval_c=polygon.[~control_seed];
+
+seed=interval_c.postln;
+thisThread.randSeed = seed;
 
 // create a function that returns a Routine
 
 r = { Routine({
-    loop({#[0,1,2,3,4,5,6,7,8,9].choose.yield })
+    loop({#[0,1,2,3].choose.yield })
 }) };
-Array.fill(10, r.value);
-//r.play;
+Array.fill(4, r.value);
 )
+
+
+
+///algorithmic sequence creation
+
+///fibonacci
+
+///pell numbers
+
+////archimedes
+
+
