@@ -62,11 +62,11 @@ signal.plot;
 */
 (
 Buffer.freeAll;
-~n=496/2;~array=20.collect{~n=~n*2};
+~n=1/2;~array=32.collect{~n=~n*2};
 ~w_function= Buffer.alloc(s,2048);
 ~function=Env([1.neg,1],[1],[0]).asSignal(1025);
 ~function=~function+(
-	Signal.sineFill(1024,~array,[0])/2;
+	Signal.sineFill(1024,~array,[0])/16;
 );
 ~function=~function.normalize;
 ~function.plot;
@@ -76,34 +76,58 @@ Buffer.freeAll;
 )
 
 (
-var freq=220, b=55,amp=1;
+var freq=56, b=55,amp=1;
 //{(Shaper.ar(~w_function.bufnum,(LPF.ar(Saw.ar(freq).abs,freq/16))+SinOsc.ar(freq-b,0.degrad),mul:MouseX.kr(0.0001,1)))}.play
-{(Shaper.ar(~w_function.bufnum,SinOsc.ar(freq,mul:MouseX.kr(0.0001,1))))}.play
+{Out.ar(0,Shaper.ar(~w_function.bufnum,SinOsc.ar(freq,mul:SinOsc.ar(MouseX.kr(0.001,100),0.degrad,0.89),phase:0.degrad)))}.play;
+{Out.ar(1,Shaper.ar(~w_function.bufnum,SinOsc.ar(freq,mul:SinOsc.ar(MouseX.kr(0.001,100),0.degrad,0.89),phase:90.degrad)))}.play;
 )
 
 
-(	~w= Buffer.alloc(s,2048);
+
+/////////////////
+
+/*(	~w= Buffer.alloc(s,2048);////////modulator
+
+~n=1/2;~array=28.collect{~n=~n*2};
 		{
-var signal,wt,n=496/2;
+	var signal,wt,ph,n=1.neg;
 	//Signal.sineFill(1024,[6,12,28,496,8128]
-	signal=Signal.sineFill(1024,20.collect{n=n*2};);
+	signal=Signal.sineFill(1024,~array;);
 
 wt = signal.asWavetable;
 ~w.loadCollection(wt);
 signal.plot;
 		}.value;
-)
+)*/
+
+/*(	~w1= Buffer.alloc(s,2048);////////////sine carrier
+		{
+var signal,wt,n=496/2;
+	//Signal.sineFill(1024,[6,12,28,496,8128]
+	signal=Signal.sineFill(1024,[6,28,496,8128]);
+
+wt = signal.asWavetable;
+~w1.loadCollection(wt);
+signal.plot;
+		}.value;
+)*/
 
 
-(
-var freq=220, b=1,amp=1/4;
-{Out.ar(0,(Osc.ar(~w.bufnum,freq,phase:0.degrad).abs+SinOsc.ar(freq-b,0.degrad))*amp)}.play;
-{Out.ar(1,(Osc.ar(~w.bufnum,freq,phase:90.degrad).abs+SinOsc.ar(freq-b,0.degrad))*amp)}.play;
-)
+/*(
+var freq=56, b=1,amp=1/4;
+{Out.ar(0,(Osc.ar(~w.bufnum,freq,phase:0.degrad)+Osc.ar(~w1.bufnum,freq,phase:0.degrad))*amp)}.play;
+{Out.ar(1,(Osc.ar(~w.bufnum,freq,phase:90.degrad)+Osc.ar(~w1.bufnum,freq,phase:90.degrad))*amp)}.play;
+)*/
 
 
-(
-var freq=56, b=1,amp=1;
+/*(
+var freq=56, b=1,amp=1/2;
 {Out.ar(0,(Osc.ar(~w.bufnum,freq,phase:0.degrad))*amp)}.play;
 {Out.ar(1,(Osc.ar(~w.bufnum,freq,phase:90.degrad))*amp)}.play;
-)
+)*/
+
+
+
+
+
+
