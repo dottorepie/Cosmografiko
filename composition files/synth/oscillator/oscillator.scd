@@ -1,6 +1,6 @@
 
 /////////////////
-////////oscilator
+////////oscillator
 (
 ~n=1.neg;~array=16256.collect{~n=~n+1;2.pow(~n/16256)};
 ~a=(0-(pi/8128)); ~ph=16256.collect{~a=~a+(pi/16256);};
