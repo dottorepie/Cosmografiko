@@ -1,6 +1,6 @@
 
 /////////////////
-////////oscillator
+////////oscilator
 (
 ~n=1.neg;~array=16256.collect{~n=~n+1;2.pow(~n/16256)};
 ~a=(0-(pi/8128)); ~ph=16256.collect{~a=~a+(pi/8128);};
@@ -30,8 +30,19 @@ var freq=6*32, b=1,amp=50;
 )
 
 
-
-
+///perfect number sequence
+(
+~primes=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71];
+(
+{
+var n=1.neg;
+~ps=5.collect{n=n+1;
+	2.pow(~primes.[n]-1)*(2.pow(~primes.[n])-1);
+};
+	~ps.asInteger;
+}.value
+)
+)
 
 /*(
 ~control_seed=18.rand
