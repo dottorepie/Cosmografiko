@@ -91,7 +91,7 @@ var freq=110, b=55,amp=1/8;
 
 
 /////////////////
-////////modulator
+////////oscillator
 (
 ~n=1.neg;~array=992.collect{~n=~n+1;2.pow(~n/992)};
 ~a=(0-(pi/496)); ~ph=992.collect{~a=~a+(pi/496);};
