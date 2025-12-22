@@ -1,3 +1,38 @@
+
+/////////////////
+////////oscilator
+(
+~n=1.neg;~array=16256.collect{~n=~n+1;2.pow(~n/16256)};
+~a=(0-(pi/8128)); ~ph=16256.collect{~a=~a+(pi/16256);};
+~bufferSize = 4096*8;
+~signalSize = 2048*8;
+)
+
+(
+Buffer.freeAll;
+~w= Buffer.alloc(s,~bufferSize);
+		{
+	var signal,wt,ph,n=1.neg;
+	//Signal.sineFill(1024,[6,12,28,496,8128]
+	signal=Signal.sineFill(~signalSize,~array);
+
+wt = signal.asWavetable;
+~w.loadCollection(wt);
+signal.plot;
+		}.value;
+)
+
+
+(
+var freq=6*32, b=1,amp=50;
+{Out.ar(0,LPF.ar((Osc.ar(~w.bufnum,freq,phase:0.degrad).abs*SinOsc.ar(freq,phase:0.degrad)),freq,amp))}.play;
+{Out.ar(1,LPF.ar((Osc.ar(~w.bufnum,freq,phase:90.degrad).abs*SinOsc.ar(freq,phase:90.degrad)),freq,amp))}.play;
+)
+
+
+
+
+
 /*(
 ~control_seed=18.rand
 
@@ -53,6 +88,9 @@ signal.plot;
 )
 
 */
+
+//////shaper form
+/*(
 (
 Buffer.freeAll;
 (
@@ -87,38 +125,7 @@ var freq=110, b=55,amp=1/8;
 {Out.ar(0,Shaper.ar(~w_function.bufnum,SinOsc.ar(freq,mul:0.1,phase:0.degrad)))}.play;
 {Out.ar(1,Shaper.ar(~w_function.bufnum,SinOsc.ar(freq,mul:0.1,phase:90.degrad)))}.play;
 )
-
-
-
-/////////////////
-////////oscillator
-(
-~n=1.neg;~array=992.collect{~n=~n+1;2.pow(~n/992)};
-~a=(0-(pi/496)); ~ph=992.collect{~a=~a+(pi/496);};
-~bufferSize = 4096;
-~signalSize = 2048;
-)
-
-(
-Buffer.freeAll;
-~w= Buffer.alloc(s,~bufferSize);
-		{
-	var signal,wt,ph,n=1.neg;
-	//Signal.sineFill(1024,[6,12,28,496,8128]
-	signal=Signal.sineFill(~signalSize,~array);
-
-wt = signal.asWavetable;
-~w.loadCollection(wt);
-signal.plot;
-		}.value;
-)
-
-
-(
-var freq=6*32, b=1,amp=100;
-{Out.ar(0,LPF.ar((Osc.ar(~w.bufnum,freq,phase:0.degrad).abs*SinOsc.ar(freq,phase:0.degrad)),freq*MouseX.kr(1/8,16),amp))}.play;
-{Out.ar(1,LPF.ar((Osc.ar(~w.bufnum,freq,phase:90.degrad).abs*SinOsc.ar(freq,phase:90.degrad)),freq*MouseX.kr(1/8,16),amp))}.play;
-)
+)*/
 
 
 
