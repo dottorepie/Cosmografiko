@@ -134,7 +134,7 @@ var sphx,sphy,sphz,azx,elx,azy,ely,azz,elz,plx=1,ply=1,plz=1;
 var num=1.neg,gold_r=((1+5.sqrt)/2),silver_r=(1+2.sqrt);
 var ellipsis=[1,1,1],spread=1;
 var n1=1.neg,n2=1.neg,n3=1.neg,n4=1.neg,n5=1.neg,n6=1.neg,n7=1.neg,n=0;
-var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1,temp=56;
+var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1,temp=56,mt=temp;
 	~az=[];~el=[];~magx=[];~magy=[];~magz=[];~qx=[];~qy=[];
 
 //	spread = if(m_z < 1) { 1 / m_z } { m_z };
@@ -143,8 +143,7 @@ var mag1=1,mag2=1,mag3=1,mag4=1,mag5=1,mag6=1,mag7=1,temp=56;
 azimuth=(temp).collect{
 			n1=n1+1;
 			az1 = 0;
-		   el1 = ((pi/2)*2.pow(n1/56)).wrap(90.neg,90);
-
+		   el1 = (2.pow(n1/mt).linlin(1,2,(pi/2).neg,(pi/2)));
 //	mag1=(mag1+(1-(1/silver_r))).wrap(0,1);
 sph1=(Spherical(mag1,(az1+angle).wrap(pi.neg,pi),(el1))).theta.round(0.000000000001);
 
@@ -153,7 +152,7 @@ sph1=(Spherical(mag1,(az1+angle).wrap(pi.neg,pi),(el1))).theta.round(0.000000000
 elevation=(temp*2).collect{
 				n2=n2+1;
 				az2 = 0;
-			el2 = ((pi/2)*2.pow(n2/56)).wrap(90.neg,90);
+			el2 =(2.pow(n2/mt).linlin(1,2,(pi/2).neg,(pi/2)));
 
 	//mag2=(mag2+(1-(1/silver_r))).wrap(0,1);
 			sph2=(Spherical(mag2,(az2+angle).wrap(pi.neg,pi),(el2))).phi.round(0.000000000001);
@@ -163,7 +162,7 @@ elevation=(temp*2).collect{
 magnitudex=	(temp*2).collect{
 					n3=n3+1;
 			az3 = 0;
-			el3 = ((pi/2)*2.pow(n3/56)).wrap(90.neg,90);
+			el3 = (2.pow(n3/mt).linlin(1,2,(pi/2).neg,(pi/2)));
 
 	//mag3=(mag3+(1-(1/silver_r))).wrap(0,1);
 	sph3=(Spherical(mag3,(az3+angle).wrap(pi.neg,pi),(el3)));
@@ -176,7 +175,7 @@ magnitudex=	(temp*2).collect{
 magnitudey=	(temp*2).collect{
 						n4=n4+1;
 			az4 = 0;
-				el4 = ((pi/2)*2.pow(n4/56)).wrap(90.neg,90);
+				el4 =(2.pow(n4/mt).linlin(1,2,(pi/2).neg,(pi/2)));
 
 	//mag4=(mag4+(1-(1/silver_r))).wrap(0,1);
 			sph4=(Spherical(mag4,(az4+angle).wrap(pi.neg,pi),(el4)));
@@ -189,8 +188,7 @@ magnitudey=	(temp*2).collect{
 qx=	(temp*2).collect{
 							n5=n5+1;
 			az5 = 0;
-			el5 = ((pi/2)*2.pow(n5/56)).wrap(90.neg,90);
-
+			el5 = (2.pow(n5/mt).linlin(1,2,(pi/2).neg,(pi/2)));
 		//mag5=(mag5+(1-(1/silver_r))).wrap(0,1);
 	sph5=(Spherical(mag5,(az5+angle).wrap(pi.neg,pi),(el5)));
 
@@ -207,7 +205,7 @@ cos((sph5.phi.round(0.000000000001)).wrap((pi/1).neg,(pi/1))))))).rho/(2.sqrt)).
 qy=	(temp*2).collect{
 								n6=n6+1;
 			az6 = 0;
-			el6 = ((pi/2)*2.pow(n6/56)).wrap(90.neg,90);
+			el6 = (2.pow(n6/mt).linlin(1,2,(pi/2).neg,(pi/2)));
 
 	//mag6=(mag6+(1-(1/silver_r))).wrap(0,1);
 					sph6=(Spherical(mag6,(az6+angle).wrap(pi.neg,pi),(el6)));
@@ -224,7 +222,7 @@ cos((sph6.phi.round(0.000000000001)).wrap((pi/1).neg,(pi/1))))))).rho/(2.sqrt)).
 magnitudez=	(temp*2).collect{
 										n7=n7+1;
 			az7 = 0;
-			el7 = ((pi/2)*2.pow(n7/56)).wrap(90.neg,90);
+			el7 = (2.pow(n7/mt).linlin(1,2,(pi/2).neg,(pi/2)));
 
 //mag7=(mag7+(1-(1/silver_r))).wrap(0,1);
 						sph7=(Spherical(mag7,(az7+angle).wrap(pi.neg,pi),(el7)));
@@ -238,9 +236,9 @@ mag_z=(Complex(sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/1).neg,(pi/1)))
 ////z axis   ambi..  sin for odd numbers, cos for even
 				};
 		n=n+1;
-//angle=(angle+(360-(360/gold_r))).wrap(0,360);
-	//	angle=(pi*2.pow(n/56));
-		angle=(n*(2pi/temp));
+	//angle=(angle+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+		angle=(2.pow(n/mt).linlin(1,2,pi.neg,pi));
+	//angle=(n*(2pi/temp));
 ~az=~az++azimuth;~el=~el++elevation;
 ~magx=~magx++magnitudex;~magy=~magy++magnitudey;~magz=~magz++magnitudez;
 ~qx=~qx++qx;~qy=~qy++qy;

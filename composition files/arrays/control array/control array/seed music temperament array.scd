@@ -114,10 +114,10 @@ Pen.translate(400,400);
 		a.rot(ot,ot,ot);
     ~v.refresh;
 
-		ot=ot+2.degrad;
+		ot=ot+1.degrad;
 
 };
-{ while { run } {~v.background_(Color.black); ~v.refresh; (1/10).wait } }.fork(AppClock);
+{ while { run } {~v.background_(Color.black); ~v.refresh; (1/1000).wait } }.fork(AppClock);
 )
 
 
@@ -238,9 +238,9 @@ mag_z=(Complex(sin((sph7.phi.round(0.000000000001)*m_z).wrap((pi/2).neg,(pi/2)))
 ////z axis   ambi..  sin for odd numbers, cos for even
 				};
 		n=n+1;
-		angle=(angle+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
-		//angle=(2.pow(n/mt).linlin(1,2,pi.neg,pi));
-	///angle=(n*(2pi/temp));
+		//angle=(angle+(2pi-(2pi/silver_r))).wrap(pi.neg,pi);
+		angle=(2.pow(n/mt).linlin(1,2,pi.neg,pi));
+	//angle=(n*(2pi/temp));
 ~az=~az++azimuth;~el=~el++elevation;
 ~magx=~magx++magnitudex;~magy=~magy++magnitudey;~magz=~magz++magnitudez;
 ~qx=~qx++qx;~qy=~qy++qy;
