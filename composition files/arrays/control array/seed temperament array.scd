@@ -1,9 +1,8 @@
 (
 var data;
 var az=0,el=0;
-var m=600,sph,az1,el1,pl=0,daz,del,harm,mag,r;
-var r1,harm1,r2,harm2,rad;
-var run = true,n=0;
+var sph,az1,el1,pl=0;
+var run = true,n=0,mag;
 var ot=0.degrad,mk=0,size=500,temp=28;
 ~data=[];
 
@@ -58,9 +57,8 @@ Slider(w, Rect(920, 10, 10, 450)).action_{|me|
 (
 var data;
 var az=0,el=0;
-var m=600,sph,az1,el1,pl=0,daz,del,harm,mag,r;
-var r1,harm1,r2,harm2,rad;
-var run = true,n=0;
+var sph,az1,el1,pl=0;
+var run = true,n=0,mag;
 var ot=0.degrad,mk=0,size=500,temp=28;
 ~data=[];
 
