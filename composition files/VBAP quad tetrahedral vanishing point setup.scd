@@ -51,4 +51,4 @@
 ///In simpler words and practice, also handier as an interface and as musical information, would be to have an initial cubic VBAP (8ch). From this a set of four channels can be
 //abstracted according to the binary tetrahedral geometry of the cube described above, and distributed to the quad speaker lines, which four channels set is to be chosen [4,6,8,11]
 ///or [5,7,8,10] can be the task of a bipolar panner that routes provides the appropriate routing. In essense outputting all the VBAP cube channels simulteniously on the
-///quad setup would simply be mixing down this channels tp [4,6,8,11]+[5,7,8,10]
+///quad setup would simply be mixing down this channels to [4+6,8+11,5+7,8+10]
