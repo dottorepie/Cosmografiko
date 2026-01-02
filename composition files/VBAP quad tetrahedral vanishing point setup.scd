@@ -134,3 +134,87 @@ out2=Out.ar(0,VBAP.ar(4,sig,~b2.bufnum,sph.theta.raddeg,sph.phi.raddeg,72)*pan2)
 //in 3D space forces the azimuthal interpolation to extend rotationally to a tetrahedral interpolation in 3D space. In turn when this quad collapses, two points remain,
 //which then collapse the fabric of the cosmos itself, begetting a new cosmic cycle via big bang and a reditribution of the cloud matter array outwards, from the monad heat-death
 ///limit
+
+
+
+
+////for further mixdown and even more virual and painterly application, the same principle can be applies in order to employ a stereo or 2.1 setup for the spatialization of the composition
+
+///that is :
+
+(
+Server.default = s = Server.local;
+////server setup
+(
+s.options.numWireBufs = 1024*4;
+s.options.numOutputBusChannels=2;
+s.options.numInputBusChannels=0;
+TempoClock.default.tempo_(1);
+s.options.memSize = 8192*4;
+//s.options.sampleRate= 44100;
+);
+
+s.waitForBoot{
+	Buffer.freeAll;
+	(
+~n=1.neg;~array=16256.collect{~n=~n+1;2.pow(~n/16256)};
+~a=(0-(pi/8128)); ~ph=16256.collect{~a=~a+(pi/8128);};
+~bufferSize = 4096*8;
+~signalSize = 2048*8;
+);
+	(
+Buffer.freeAll;
+~w= Buffer.alloc(s,~bufferSize);
+		{
+	var signal,wt;
+	signal=Signal.sineFill(~signalSize,~array,~ph);
+
+wt = signal.asWavetable;
+~w.loadCollection(wt);
+//signal.plot;
+		}.value;
+);
+(
+~az1=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
+~el1=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad];
+);
+/////tetrahedron2
+(
+~az2=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
+~el2=[35.264390.degrad,35.264390.degrad,35.264390.neg.degrad,35.264390.neg.degrad];
+);
+
+
+({
+var sig,out1,out2,pan1,pan2,phase1,phase2,equlibrium,p_amp1=0.5,p_amp2=0.5,coordinate=0,angle,pan_az,pan_el;
+var pos1,pos2,sph,phase,freq=220,f=1,amp=1,sph1,sph2,angle1,angle2,az,el;
+
+equlibrium=90.degrad;
+phase1=0.degrad; phase2=equlibrium;
+pan1=SinOsc.ar(freq/32,phase:phase1,mul:p_amp1);
+pan2=SinOsc.ar(freq/32,phase:phase2,mul:p_amp2);
+
+		az=SinOsc.ar(1/2,0.degrad,pi);
+		el=SinOsc.ar(1/4,90.degrad,pi/2);
+
+//sph1=Spherical(1,(~az1.[coordinate]+az).wrap(pi.neg,pi),(~el1.[coordinate]+el).wrap((pi/2).neg,(pi/2)));
+//sph2=Spherical(1,(~az2.[coordinate]+az).wrap(pi.neg,pi),(~el2.[coordinate]+el).wrap((pi/2).neg,(pi/2)));
+
+sph1=Spherical(1,(az),(el));
+sph2=Spherical(1,(az),(el));
+
+angle1=Complex(exp(Complex(0,1)*sph1.theta).real,exp(Complex(0,1)*sph1.phi).imag).theta;
+angle2=Complex(exp(Complex(0,1)*sph2.theta).real,exp(Complex(0,1)*sph2.phi).imag).theta;
+
+angle=Complex(exp(Complex(0,1)*angle1).real,exp(Complex(0,1)*angle2).imag).theta;
+
+pos1=exp(Complex(0,1)*angle).real;
+pos2=exp(Complex(0,1)*angle).imag;
+
+sig=LPF.ar((Osc.ar(~w.bufnum,freq,phase:angle,mul:100).abs*SinOsc.ar(freq,phase:angle)),freq*f.round(1),amp);
+
+out1=Out.ar(0,Pan2.ar(sig,pos1)*pan1);
+out2=Out.ar(0,Pan2.ar(sig,pos2)*pan2);
+
+}.play)}
+)
