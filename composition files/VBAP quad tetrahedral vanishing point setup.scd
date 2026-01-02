@@ -70,6 +70,24 @@ s.options.memSize = 8192*4;
 
 s.waitForBoot{
 	Buffer.freeAll;
+	(
+~n=1.neg;~array=16256.collect{~n=~n+1;2.pow(~n/16256)};
+~a=(0-(pi/8128)); ~ph=16256.collect{~a=~a+(pi/8128);};
+~bufferSize = 4096*8;
+~signalSize = 2048*8;
+);
+	(
+Buffer.freeAll;
+~w= Buffer.alloc(s,~bufferSize);
+		{
+	var signal,wt;
+	signal=Signal.sineFill(~signalSize,~array,~ph);
+
+wt = signal.asWavetable;
+~w.loadCollection(wt);
+signal.plot;
+		}.value;
+);
 (
 ~az1=[45.degrad,135.neg.degrad,45.neg.degrad,135.degrad];
 ~el1=[35.264390.neg.degrad,35.264390.neg.degrad,35.264390.degrad,35.264390.degrad];
@@ -91,18 +109,20 @@ s.waitForBoot{
 	);
 
 ({
-var sig,out1,out2,pan1,pan2,phase1,phase2,equlibrium,p_amp1=0.5,p_amp2=0.5;
+var sig,out1,out2,pan1,pan2,phase1,phase2,equlibrium,p_amp1=0.5,p_amp2=0.5,sph,phase,freq=220,f=1,amp=1;
 
-		equlibrium=MouseX.kr(0.degrad,90.degrad).poll;
-	phase1=0.degrad; phase2=equlibrium;
+sph=Spherical(2pi,45.degrad,90.degrad);
+phase=Complex(exp(Complex(0,1)*sph.theta).real,exp(Complex(0,1)*sph.phi).imag).theta;
+sig=LPF.ar((Osc.ar(~w.bufnum,freq,phase:phase,mul:100).abs*SinOsc.ar(freq,phase:phase)),freq*f.round(1),amp);
+//sig=SinOsc.ar(440,phase,mul:0.1);
 
-	sig=SinOsc.ar(440,mul:0.1);
+equlibrium=90.degrad;
+phase1=0.degrad; phase2=equlibrium;
+pan1=SinOsc.ar(freq/32,phase:phase1,mul:p_amp1);
+pan2=SinOsc.ar(freq/32,phase:phase2,mul:p_amp2);
 
-	pan1=SinOsc.ar(1/2,phase:phase1,mul:p_amp1); pan2=SinOsc.ar(1/2,phase:phase2,mul:p_amp2);
-
-out1=Out.ar(0,VBAP.ar(4,sig,~b1.bufnum,SinOsc.ar(1/4,0.degrad,180),0,70)*pan1);
-
-out2=Out.ar(0,VBAP.ar(4,sig,~b2.bufnum,SinOsc.ar(1/4,90.degrad,180),0,70)*pan2);
+out1=Out.ar(0,VBAP.ar(4,sig,~b1.bufnum,sph.theta.raddeg,sph.phi.raddeg,72)*pan1);
+out2=Out.ar(0,VBAP.ar(4,sig,~b2.bufnum,sph.theta.raddeg,sph.phi.raddeg,72)*pan2);
 
 }.play)}
 )
