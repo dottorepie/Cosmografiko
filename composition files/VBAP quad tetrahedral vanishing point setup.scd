@@ -194,13 +194,12 @@ wt = signal.asWavetable;
 		}.value;
 );
 
-
 ({
 var sig,out1,out2,pan1,pan2,phase1,phase2,equlibrium,p_amp1=1,p_amp2=1,coordinate=0,angle,pan_az,pan_el;
 var pos1,pos2,sph,phase,freq=220,f=1,amp=1,sph1,sph2,angle1x,angle2x,angle1y,angle2y,anglex,angley,az,el;
 
-equlibrium=2pi;
-phase1=0.degrad; phase2=(equlibrium-90.degrad).wrap2(pi);
+equlibrium=pi;
+		phase1=0.degrad; phase2=equlibrium.linlin(0,pi,0,pi/2);
 pan1=SinOsc.ar(0.1,phase:phase1,mul:p_amp1);
 pan2=SinOsc.ar(0.1,phase:phase2,mul:p_amp2);
 
@@ -211,7 +210,7 @@ pan2=SinOsc.ar(0.1,phase:phase2,mul:p_amp2);
 //sph2=Sphericalz(1,(~az2.[coordinate]+az).wrap(pi.neg,pi),(~el2.[coordinate]+el).wrap((pi/2).neg,(pi/2)));
 
 sph1=Spherical(1,(az),(el));
-sph2=Spherical(1,(az),(el+equlibrium).wrap2((pi/2)));
+sph2=Spherical(1,(az),((el-equlibrium).wrap2((pi/2))));
 
 angle1x=Complex(exp(Complex(0,1)*sph1.theta).real,exp(Complex(0,1)*sph1.phi).real).theta;
 angle1y=Complex(exp(Complex(0,1)*sph1.theta).real,exp(Complex(0,1)*sph1.phi).imag).theta;
